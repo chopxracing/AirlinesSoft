@@ -24,7 +24,7 @@
             <a href="/work" class="nav-link">Экипаж</a>
         </li>
         <li class="nav-item">
-            <a href="#" class="nav-link">Отчетность</a>
+            <a href="/reports" class="nav-link">Отчетность</a>
         </li>
     </ul>
 </header>
@@ -43,7 +43,7 @@
                     <svg class="bi pe-none me-2" width="16" height="16" aria-hidden="true">
                         <use xlink:href="#speedometer2"></use>
                     </svg>
-                    Дашборд
+                    Ближайший вылет
                 </a>
             </li>
             <li>
@@ -51,7 +51,7 @@
                     <svg class="bi pe-none me-2" width="16" height="16" aria-hidden="true">
                         <use xlink:href="#table"></use>
                     </svg>
-                    Управление
+                    Управление (КВС)
                 </a>
             </li>
         </ul>

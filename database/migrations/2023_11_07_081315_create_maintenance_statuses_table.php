@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('flights', function (Blueprint $table) {
-            $table->datetime('departure_date')->nullable();
-            $table->datetime('arrival_date')->nullable();
+        Schema::create('maintenance_statuses', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->timestamps();
         });
     }
 
@@ -22,9 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('flights', function (Blueprint $table) {
-            $table->dropColumn('departure_date');
-            $table->dropColumn('arrival_date');
-        });
+        Schema::dropIfExists('maintenance_statuses');
     }
 };

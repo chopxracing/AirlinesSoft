@@ -19,6 +19,8 @@ return new class extends Migration
             $table->unsignedBigInteger('aircraft_id');
             $table->unsignedBigInteger('flight_status_id')->default(1);
             $table->foreign('aircraft_id')->references('id')->on('aircraft');
+            $table->datetime('departure_date')->nullable();
+            $table->datetime('arrival_date')->nullable();
             $table->integer('flight_time')->default(0);
             $table->boolean('is_active')->default(true);
             $table->timestamps();

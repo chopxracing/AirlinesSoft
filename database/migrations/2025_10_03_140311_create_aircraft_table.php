@@ -16,8 +16,12 @@ return new class extends Migration
             $table->string('name');
             $table->integer('passenger_capacity');
             $table->integer('max_flight_kilometers');
+            $table->string('registration_number');
             $table->unsignedBigInteger('aircraft_status_id');
+            $table->unsignedBigInteger('maintenance_status_id');
             $table->foreign('aircraft_status_id')->references('id')->on('aircraft_statuses');
+            $table->foreign('maintenance_status_id')->references('id')->on('maintenance_statuses');
+            $table->integer('flight_hours');
             $table->timestamps();
         });
     }

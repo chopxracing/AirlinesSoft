@@ -14,6 +14,7 @@
         @if($flighthistories->count() > 0)
             <div class="row g-4">
                 @foreach($flighthistories as $flighthistory)
+                    @if($flighthistory->flight && !in_array($flighthistory->flight->flight_status_id, [4, 5]))
                     <div class="col-lg-6">
                         <div class="card flight-card h-100">
                             <!-- Заголовок карточки -->
@@ -22,10 +23,7 @@
                                     <h6 class="mb-0 text-primary">
                                         ✈️ Рейс #{{ $flighthistory->flight->flight_number }}
                                     </h6>
-                                    <div class="text-end">
-                                        <div class="text-success fw-bold">{{ $flighthistory->flight_hours }}ч</div>
-                                        <small class="text-muted">Налет</small>
-                                    </div>
+
                                 </div>
                             </div>
 
@@ -158,6 +156,7 @@
                             </div>
                         </div>
                     </div>
+                    @endif
                 @endforeach
             </div>
         @else

@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('flight_id');
-            $table->integer('flight_hours'); // Часы налета для этого пользователя на этом рейсе
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');

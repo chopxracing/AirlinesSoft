@@ -11,7 +11,6 @@ class FlightHistory extends Model
     protected $fillable = [
         'user_id',
         'flight_id',
-        'flight_hours',
     ];
 
     public function user()

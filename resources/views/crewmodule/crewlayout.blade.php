@@ -24,7 +24,7 @@
             <a href="/work" class="nav-link">Экипаж</a>
         </li>
         <li class="nav-item">
-            <a href="#" class="nav-link">Отчетность</a>
+            <a href="/reports" class="nav-link">Отчетность</a>
         </li>
     </ul>
 </header>

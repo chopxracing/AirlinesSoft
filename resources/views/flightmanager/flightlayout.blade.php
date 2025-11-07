@@ -24,7 +24,7 @@
             <a href="/work" class="nav-link">Экипаж</a>
         </li>
         <li class="nav-item">
-            <a href="#" class="nav-link">Отчетность</a>
+            <a href="/reports" class="nav-link">Отчетность</a>
         </li>
     </ul>
 </header>
@@ -76,6 +76,14 @@
                         <use xlink:href="#grid"></use>
                     </svg>
                     Назначить сотрудников
+                </a>
+            </li>
+            <li>
+                <a href="/flight/aircraftcreate" class="nav-link text-white">
+                    <svg class="bi pe-none me-2" width="16" height="16" aria-hidden="true">
+                        <use xlink:href="#grid"></use>
+                    </svg>
+                    Зарегистрировать новый самолет в системе
                 </a>
             </li>
         </ul>

@@ -11,7 +11,7 @@
         @if($flighthistories->count() > 0)
             <div class="row">
                 @foreach($flighthistories as $flighthistory)
-                    @while($flighthistoriy->flights->flight_status_id != 4)
+                    @if($flighthistory->flight && !in_array($flighthistory->flight->flight_status_id, [4, 5]))
                     <div class="col-lg-6 col-xl-4 mb-4">
                         <div class="card shadow-sm h-100">
                             <div class="card-header bg-light d-flex justify-content-between align-items-center">
@@ -91,22 +91,10 @@
                             </div>
                         </div>
                     </div>
-                    @endwhile
+                    @endif
                 @endforeach
             </div>
-            <form method="POST" action="{{ route('work.crewstatusupdate') }}">
-                @csrf
-                @method('patch')
-                <button type="submit" name="status_id" value="3" class="btn btn-outline-success text-start">
-                    <i class="fas fa-plane-departure me-2"></i>Я прибыл в аэропорт
-                </button>
-                <button type="submit" name="status_id" value="2" class="btn btn-outline-success text-start">
-                    <i class="fas fa-plane-departure me-2"></i>Я прибыл в самолет
-                </button>
-                <button type="submit" name="status_id" value="1" class="btn btn-outline-success text-start">
-                    <i class="fas fa-plane-departure me-2"></i>Полет завершен
-                </button>
-            </form>
+
 
 
         @else

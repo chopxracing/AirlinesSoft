@@ -13,6 +13,7 @@ use App\Models\CrewStatus;
 use App\Models\Flight;
 use App\Models\FlightHistory;
 use App\Models\FlightStatus;
+use App\Models\MaintenanceStatus;
 use App\Models\Position;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -112,6 +113,8 @@ class FlightController extends Controller
 
     public function create()
     {
+
+
         $data = request()->validate([
             'flight_number' => 'required',
             'aircraft_id' => 'required',
@@ -121,6 +124,11 @@ class FlightController extends Controller
             'arrival_date' => 'required|date',
         ]);
         Flight::create($data);
+
+        $aircraft = Aircraft::find($data['aircraft_id']);
+        $aircraft->update([
+            'aircraft_status_id' => 2,
+        ]);
         return redirect('/flight/flightcreate');
     }
 
@@ -164,7 +172,7 @@ class FlightController extends Controller
         // Доступные сотрудники (экипаж)
         $availableCrew = User::with(['position', 'clearance'])
             ->whereHas('position', function($query) {
-                $query->whereIn('name', ['Пилот', 'Второй пилот', 'Стюардесса', 'Бортпроводник']);
+                $query->whereIn('name', ['КВС', 'Второй пилот', 'Стюардесса', 'Бортпроводник']);
             })
             ->where('status_id', 1) // Активный статус
             ->get();
@@ -186,7 +194,6 @@ class FlightController extends Controller
         $validated = $request->validate([
             'flight_id' => 'required|exists:flights,id',
             'user_id' => 'required|exists:users,id',
-            'flight_hours' => 'required|integer|min:1|max:24',
             'role' => 'required|string|max:100'
         ]);
 
@@ -215,17 +222,29 @@ class FlightController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function showaircraftcreate()
     {
-        //
+        $maintenancestatuses = MaintenanceStatus::all();
+        $aircraftstatuses = AircraftStatus::all();
+        return view('flightmanager.aircraftcreate', compact('aircraftstatuses', 'maintenancestatuses'));
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Crew $crew)
+    public function aircraftcreate()
     {
-        //
+        $data = request()->validate([
+            'name' => 'required|string|max:100',
+            'passenger_capacity' => 'required|integer|min:1',
+            'max_flight_kilometers' => 'required|integer|min:1',
+            'registration_number' => 'required',
+            'aircraft_status_id' => 'required|exists:aircraft_statuses,id',
+            'maintenance_status_id' => 'required|exists:maintenance_statuses,id',
+            'flight_hours' => 'required|integer|min:1',
+        ]);
+        Aircraft::create($data);
+        return redirect('/flight/aircraftcreate');
     }
 
     /**

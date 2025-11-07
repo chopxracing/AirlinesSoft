@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CrewController;
 use App\Http\Controllers\FlightController;
 use App\Http\Controllers\MainController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\WorkController;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
@@ -34,11 +35,19 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/flight/assign-crew', [FlightController::class, 'assignCrew'])->name('flight.assign.crew');
     Route::post('/flight/assign-crew', [FlightController::class, 'storeCrewAssignment'])->name('flight.store.crew.assignment');
     Route::delete('/flight/assign-crew/{id}', [FlightController::class, 'removeCrewAssignment'])->name('flight.remove.crew.assignment');
+    Route::get('/flight/aircraftcreate', [FlightController::class, 'showaircraftcreate'])->name('flight.aircraftcreateForm');
+    Route::post('/flight/aircraftcreate', [FlightController::class, 'aircraftcreate'])->name('flight.aircraftcreate');
+
     Route::get('work', [WorkController::class, 'index'])->name('work');
     Route::get('/work/myflights', [WorkController::class, 'showmyflights'])->name('work.myflights');
     Route::patch('/work', [WorkController::class, 'crewstatusupdate'])->name('work.crewstatusupdate');
     Route::get('/work/work', [WorkController::class, 'workshow'])->name('work.work');
     Route::patch('/work/work', [WorkController::class, 'flightstatusupdate'])->name('work.flightstatusupdate');
+    Route::get('/reports', [ReportController::class, 'index'])->name('reports');
+    Route::get('/reports/usersexport', [ReportController::class, 'usersexport'])->name('reports.usersexport');
+    Route::get('/reports/flightsexport', [ReportController::class, 'flightsexport'])->name('reports.flightsexport');
+    Route::get('/reports/aircraftsexport', [ReportController::class, 'aircraftsexport'])->name('reports.aircraftsexport');
+
 });
 
 

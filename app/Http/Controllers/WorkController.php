@@ -28,12 +28,16 @@ class WorkController extends Controller
     }
 
     public function workshow()
-    {
+    {   $user = auth()->user();
         $crews = User::all();
-        $flights = Flight::all();
+        $flights = Flight::where('is_active', 1)->get();
         $flight_statuses = FlightStatus::all();
         $flighthistories = FlightHistory::where('user_id', auth()->id())->get();
-        return view('work.work', compact('crews', 'flights', 'flighthistories', 'flight_statuses'));
+        if($user->position_id == 1) {
+            return view('work.work', compact('crews', 'flights', 'flighthistories', 'flight_statuses'));
+        } else {
+            return redirect()->route('work');
+        }
     }
 
     public function crewstatusupdate()
@@ -67,16 +71,82 @@ class WorkController extends Controller
             return redirect()->route('work.work')->with('error', 'Вы не назначены на этот полет!');
         }
 
-        // Находим полет и обновляем статус
-        $flight = Flight::find($data['flight_id']);
+        // Находим полет и загружаем связанный самолет
+        $flight = Flight::with('aircraft')->find($data['flight_id']);
 
         if (!$flight) {
             return redirect()->route('work.work')->with('error', 'Полет не найден!');
         }
 
-        // Обновляем flight_status_id (правильное название поля)
-        $flight->flight_status_id = $data['flight_status_id'];
-        $flight->save();
+        // Получаем самолет из отношения, а не отдельным поиском
+        $aircraft = $flight->aircraft;
+
+        // Обновляем статус полета
+        $flight->update([
+            'flight_status_id' => $data['flight_status_id']
+        ]);
+
+        // Обновляем статус пользователя в зависимости от статуса полета
+        switch ($data['flight_status_id']) {
+            case 2: // Запланирован
+                $user->update([
+                    'status_id' => 2,
+                    'last_action_at' => now()
+                ]);
+                break;
+
+            case 3: // В полете
+                $user->update([
+                    'status_id' => 3,
+                    'last_action_at' => now()
+                ]);
+                break;
+
+            case 4: // Завершен
+            case 5: // Отменен
+                $user->update([
+                    'status_id' => 1,
+                    'last_action_at' => now(),
+                ]);
+
+                // Только для завершенных полетов добавляем часы налета
+                if ($data['flight_status_id'] == 4) {
+                    $duration = $flight->arrival_date->diff($flight->departure_date);
+                    $flightHours = $duration->h + ($duration->i / 60); // Учитываем минуты
+
+                    // Обновляем налет пользователя
+                    $user->update([
+                        'time_in_air' => $user->time_in_air + $flightHours,
+                    ]);
+
+                    // Обновляем данные полета
+                    $flight->update([
+                        'is_active' => 0,
+                        'flight_time' => $flightHours,
+                    ]);
+
+                    // Обновляем самолет, если он существует
+                    if ($aircraft) {
+                        $aircraft->update([
+                            'flight_hours' => ($aircraft->flight_hours ?? 0) + $flightHours,
+                            'aircraft_status_id' => 1, // Делаем самолет доступным
+                        ]);
+                    }
+                } else {
+                    // Для отмененных полетов просто деактивируем
+                    $flight->update([
+                        'is_active' => 0,
+                    ]);
+
+                    // Освобождаем самолет
+                    if ($aircraft) {
+                        $aircraft->update([
+                            'aircraft_status_id' => 1,
+                        ]);
+                    }
+                }
+                break;
+        }
 
         return redirect()->route('work.work')->with('success', 'Статус полета обновлен!');
     }

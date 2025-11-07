@@ -55,12 +55,6 @@
                                            placeholder="Например: Командир воздушного судна" required>
                                 </div>
 
-                                <!-- Часы налета -->
-                                <div class="col-md-6">
-                                    <label for="flight_hours" class="form-label">Часы налета *</label>
-                                    <input type="number" name="flight_hours" id="flight_hours" class="form-control"
-                                           min="1" max="24" value="2" required>
-                                </div>
 
                                 <!-- Кнопка -->
                                 <div class="col-12">
