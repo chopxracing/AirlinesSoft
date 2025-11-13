@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\AircraftsExport;
 use App\Exports\FlightsExport;
 use App\Exports\UsersExport;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -12,7 +13,8 @@ class ReportController extends Controller
 {
     public function index()
     {
-        return view('reports.report');
+        $users = User::all();
+        return view('reports.report', compact('users'));
     }
 
     public function usersexport()

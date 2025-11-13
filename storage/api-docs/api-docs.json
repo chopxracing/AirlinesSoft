@@ -1,0 +1,135 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Airlines Doc Api",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/": {},
+        "/api/v1/flights": {
+            "get": {
+                "tags": [
+                    "Flight"
+                ],
+                "summary": "Список активных рейсов",
+                "operationId": "04192312778411eb9476a63ab24c4462",
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "arrival": {
+                                                        "type": "string",
+                                                        "example": "Moscow"
+                                                    },
+                                                    "departure": {
+                                                        "type": "string",
+                                                        "example": "Sochi"
+                                                    },
+                                                    "flight_number": {
+                                                        "type": "string",
+                                                        "example": "AA0001"
+                                                    },
+                                                    "aircraft_id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "flight_status_id": {
+                                                        "type": "integer",
+                                                        "example": 4
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/flights/{flight}": {
+            "patch": {
+                "tags": [
+                    "Flight"
+                ],
+                "summary": "Обновление статуса полета",
+                "operationId": "cab2c7529f58a4bbb855c0a73dea26ef",
+                "parameters": [
+                    {
+                        "name": "flight",
+                        "in": "path",
+                        "description": "ID полета",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 3
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "flight_status_id": {
+                                        "type": "integer",
+                                        "example": 7
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "flight_status_id": {
+                                                    "type": "integer",
+                                                    "example": 7
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Flight",
+            "description": "Flight"
+        }
+    ]
+}

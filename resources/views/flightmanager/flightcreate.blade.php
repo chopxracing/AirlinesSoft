@@ -43,9 +43,11 @@
                                 required>
                             <option value="">Выберите самолет</option>
                             @foreach($aircrafts as $aircraft)
+                                @if($aircraft->aircraft_status_id != 3)
                                 <option value="{{ $aircraft->id }}" {{ old('aircraft_id') == $aircraft->id ? 'selected' : '' }}>
                                     {{ $aircraft->name }} (Вместимость: {{ $aircraft->passenger_capacity }} пасс.)
                                 </option>
+                                @endif
                             @endforeach
                         </select>
                         @error('aircraft_id')
@@ -79,6 +81,20 @@
                                value="{{ old('arrival') }}"
                                required>
                         @error('arrival')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="airport" class="form-label">Аэропорт вылета и прилета</label>
+                        <input type="text"
+                               name="airport"
+                               id="airport"
+                               class="form-control @error('airport') is-invalid @enderror"
+                               placeholder="Например: DME - IRK"
+                               value="{{ old('airport') }}"
+                               required>
+                        @error('airport')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>

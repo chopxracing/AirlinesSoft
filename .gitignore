@@ -23,6 +23,7 @@ yarn-error.log
 /auth.json
 /.fleet
 /.idea
+*.sock
 /.nova
 /.vscode
 /.zed

@@ -48,9 +48,11 @@ class Flight extends Model
         'flight_number',
         'aircraft_id',
         'flight_time',
+        'flight_status_id',
         'is_active',
         'departure_date',
         'arrival_date',
+        'airport',
     ];
 
     public function aircraft()

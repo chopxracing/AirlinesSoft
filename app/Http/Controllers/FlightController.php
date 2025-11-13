@@ -122,6 +122,7 @@ class FlightController extends Controller
             'departure' => 'required',
             'departure_date' => 'required|date',
             'arrival_date' => 'required|date',
+            'airport' => 'required',
         ]);
         Flight::create($data);
 

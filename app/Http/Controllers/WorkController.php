@@ -7,16 +7,23 @@ use App\Models\Flight;
 use App\Models\FlightHistory;
 use App\Models\FlightStatus;
 use App\Models\User;
+use Illuminate\Support\Facades\Http;
 
 class WorkController extends Controller
 {
     public function index()
     {
+
+
         $flights = Flight::all();
-        $flighthistories = FlightHistory::where('user_id', auth()->id())->get(); // Добавлен get()
+        $flighthistories = FlightHistory::where('user_id', auth()->id())->get();
+
+        // Получаем погоду для рейсов
+        $weatherData = $this->showFlightsWeather($flighthistories);
+
         $crews = User::all();
         $aircrafts = Aircraft::all();
-        return view('work.workmodule', compact('flights', 'crews', 'flighthistories', 'aircrafts'));
+        return view('work.workmodule', compact('flights', 'crews', 'flighthistories', 'aircrafts', 'weatherData'));
     }
     public function myflights()
     {
@@ -150,4 +157,40 @@ class WorkController extends Controller
 
         return redirect()->route('work.work')->with('success', 'Статус полета обновлен!');
     }
+
+
+    public function showFlightsWeather($flightHistories)
+    {
+        $apiKey = env('OPENWEATHER_API_KEY');
+        $promises = [];
+
+        foreach ($flightHistories as $flighthistory) {
+            foreach (['departure', 'arrival'] as $type) {
+                $city = $flighthistory->flight->{$type};
+                $promises[$flighthistory->id][$type] = Http::withoutVerifying()->async()->get('https://api.openweathermap.org/data/2.5/weather', [
+                    'q' => $city,
+                    'appid' => $apiKey,
+                    'units' => 'metric',
+                    'lang' => 'ru',
+                ]);
+            }
+        }
+
+        $weatherData = [];
+
+        foreach ($promises as $fhId => $types) {
+            foreach ($types as $type => $promise) {
+                try {
+                    $response = $promise->wait(); // Ждём результат
+                    $weatherData[$fhId][$type] = $response->successful() ? $response->json() : null;
+                } catch (\Exception $e) {
+                    $weatherData[$fhId][$type] = null;
+                }
+            }
+        }
+
+        return $weatherData;
+    }
+
+
 }
