@@ -181,9 +181,14 @@ class WorkController extends Controller
         foreach ($promises as $fhId => $types) {
             foreach ($types as $type => $promise) {
                 try {
-                    $response = $promise->wait(); // Ждём результат
-                    $weatherData[$fhId][$type] = $response->successful() ? $response->json() : null;
-                } catch (\Exception $e) {
+                    $response = $promise->wait();
+
+                    if ($response->successful()) {
+                        $weatherData[$fhId][$type] = $response->json();
+                    } else {
+                        $weatherData[$fhId][$type] = null;
+                    }
+                } catch (\Throwable $e) {
                     $weatherData[$fhId][$type] = null;
                 }
             }
